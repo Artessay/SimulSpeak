@@ -1,28 +1,28 @@
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 
 public class Angie {
+    private final HashMap<String, Processor> routeMap = new HashMap<String, Processor>();
+
+    public void use(String route, Processor processor) {
+        routeMap.put(route, processor);
+    }
+
     public void listen(int port) {
-        try (// 监听 port 端口
-            ServerSocket serverSocket = new ServerSocket(port)) {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
             while (true) {
-                // 接受连接
                 Socket client = serverSocket.accept();
-                
-                // 创建新线程，发送数据
                 new Thread(() -> {
                     try {
-                        OutputStream clientOutStream = client.getOutputStream();
-                        clientOutStream.write(
-                                ("HTTP/1.1 200\n"
-                                        + "Content-Type: text/html\n"
-                                        + "\n"
-                                        + "<h1> Hello, web Framework! </h1>").getBytes()
-                        );
-                        clientOutStream.flush();
-                        clientOutStream.close();
+                        Request request = new Request(client.getInputStream());
+                        Response response = new Response(client.getOutputStream());
+                        if (routeMap.containsKey(request.getUrl())) {
+                            routeMap.get(request.getUrl()).callback(request, response);
+                        } else {
+                            response.setStatus(404).send(request.getUrl() + " not found");
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

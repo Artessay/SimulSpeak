@@ -22,10 +22,10 @@ public class Main {
 	
 	public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-        //µ¥Ïß³Ì³Ø
+        //ï¿½ï¿½ï¿½ß³Ì³ï¿½
         ExecutorService es = Executors.newSingleThreadExecutor();
         try {
-            //´´½¨¿Í»§¶Ë
+            //ï¿½ï¿½ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½
         //	Webcam webcam=Webcam.getDefault();
         //	webcam.open();
         //	BufferedImage imgs=webcam.getImage();
@@ -33,17 +33,17 @@ public class Main {
 
         	
 //            Socket socket = new Socket("localhost", 9999);
-//           // System.out.println("·þÎñÆ÷Á¬½Ó³É¹¦£¡");
-//            //¹¹½¨Êä³öÊäÈëÁ÷
+//           // System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³É¹ï¿½ï¿½ï¿½");
+//            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //            ObjectOutputStream oOut = new ObjectOutputStream(socket.getOutputStream());
 //            ObjectInputStream oIn = new ObjectInputStream(socket.getInputStream());
 //            //Packet(long id1, long id2, String type, byte[] instream, String ip, String port,String address)
 //            Packet message = new Packet(222, 222, 0, 0, "apply", null, "", "", "");
-//            //·¢ËÍ¸ø·þÎñÆ÷
+//            //ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //            oOut.writeObject(message);
-//            //·þÎñÆ÷·µ»Ø »¶Ó­ÐÅÏ¢
+//            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ó­ï¿½ï¿½Ï¢
 //            message = (Packet) oIn.readObject();
-//            //´òÓ¡·þÎñÆ÷·µ»ØµÄÐÅÏ¢
+//            //ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½Ï¢
 //            String a = message.GetIp();
 //            String b = message.GetPort();
 //            
@@ -51,8 +51,8 @@ public class Main {
             
           //  int port = Integer.parseInt(b);
             Socket socket1 = new Socket("localhost", 8888);
-            System.out.println("store ·þÎñÆ÷Á¬½Ó³É¹¦£¡");
-            //¹¹½¨Êä³öÊäÈëÁ÷
+            System.out.println("store ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³É¹ï¿½ï¿½ï¿½");
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
            // ObjectOutputStream oOut1 = new ObjectOutputStream(socket1.getOutputStream());
             DataInputStream oIn1 = new DataInputStream(socket1.getInputStream());
             
@@ -64,18 +64,18 @@ public class Main {
         //    File imgFile = new File("C:\\Users\\86173\\Desktop\\test.mp4");
 //    		long lengths = 0;
 //            try {
-//                DataInputStream inStream = null;// ¶¨ÒåÊý¾ÝÊäÈëÁ÷¶ÔÏó
+//                DataInputStream inStream = null;// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //                if (imgFile != null) {
-//                    lengths = imgFile.length();// »ñµÃÑ¡ÔñÍ¼Æ¬µÄ´óÐ¡
-//                    inStream = new DataInputStream(new FileInputStream(imgFile));// ´´½¨ÊäÈëÁ÷¶ÔÏó
+//                    lengths = imgFile.length();// ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Í¼Æ¬ï¿½Ä´ï¿½Ð¡
+//                    inStream = new DataInputStream(new FileInputStream(imgFile));// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //                } 
-//                outputStream.writeLong(lengths);// ½«ÎÄ¼þµÄ´óÐ¡Ð´ÈëÊä³öÁ÷
-//                byte[] bt = new byte[(int) lengths];// ´´½¨×Ö½ÚÊý×é
+//                outputStream.writeLong(lengths);// ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ä´ï¿½Ð¡Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//                byte[] bt = new byte[(int) lengths];// ï¿½ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½ï¿½ï¿½
 //                int len = -1;
-//                while ((len = inStream.read(bt)) != -1) {// ½«Í¼Æ¬ÎÄ¼þ¶ÁÈ¡µ½×Ö½ÚÊý×é
+//                while ((len = inStream.read(bt)) != -1) {// ï¿½ï¿½Í¼Æ¬ï¿½Ä¼ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½ï¿½ï¿½
 //                	outputStream.write(bt);
 //                }
-//                System.out.println("ÎÄ¼þ·¢ËÍ³É¹¦£¡£¡");
+//                System.out.println("ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Í³É¹ï¿½ï¿½ï¿½ï¿½ï¿½");
 //            } catch (IOException e1) {
 //                e1.printStackTrace();
 //            }
@@ -87,19 +87,19 @@ public class Main {
             System.out.println(lengths);
             if(lengths>0){
              //   String fileName = oIn1.readUTF();
-                // ´´½¨×Ö½ÚÊý×é
+                // ï¿½ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½ï¿½ï¿½
                 byte[] bt = new byte[(int) lengths];
                 System.out.println(lengths);
                 for (int i = 0; i < bt.length; i++) {
               //  	System.out.println(lengths);
-                    bt[i] = oIn1.readByte();// ¶ÁÈ¡×Ö½ÚÐÅÏ¢²¢´æ´¢µ½×Ö½ÚÊý×é
+                    bt[i] = oIn1.readByte();// ï¿½ï¿½È¡ï¿½Ö½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½æ´¢ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½ï¿½ï¿½
                //     System.out.println(lengths);
                 }
                 File img=new File("C:\\Users\\86173\\Desktop\\video1.mp4");
                 OutputStream out=new DataOutputStream(new FileOutputStream(img));
                 System.out.println(lengths);
                 out.write(bt);
-                System.out.println("ÎÄ¼þ½ÓÊÕ³É¹¦£¡£¡");
+                System.out.println("ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Õ³É¹ï¿½ï¿½ï¿½ï¿½ï¿½");
             }
             
             
