@@ -9,6 +9,7 @@ public class Response {
 
     public Response(OutputStream outputStream) {
         this.outputStream = outputStream;
+        this.status = 200;
     }
 
     public Response setHeaders(String key, String value) {
@@ -49,8 +50,11 @@ public class Response {
             }
             dataBuilder.append("\n");
 
+            System.out.println(dataBuilder);
+
             outputStream.write(dataBuilder.toString().getBytes());
             outputStream.write(data);
+
             outputStream.flush();
             outputStream.close();
         } catch (IOException e) {

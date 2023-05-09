@@ -18,12 +18,15 @@ public class Request {
 
             // analyse GET request
             String[] requestLine =  bufferedReader.readLine().split(" ");
+
             if (requestLine.length == 3 && requestLine[2].equals("HTTP/1.1")) {
                 this.method = requestLine[0];
                 String fullUrl = requestLine[1];
                 if (fullUrl.contains("?")) {
                     this.url = fullUrl.substring(0, fullUrl.indexOf("?"));
                     this.params = fullUrl.substring(fullUrl.indexOf("?") + 1);
+
+                    System.out.println(method + " " + url + " " + params);
 
                     String[] keyValues = this.params.split("&");
                     for (String keyValue : keyValues) {

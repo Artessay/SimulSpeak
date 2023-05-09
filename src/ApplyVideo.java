@@ -1,6 +1,8 @@
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class ApplyVideo implements Processor {
     @Override
@@ -14,34 +16,30 @@ public class ApplyVideo implements Processor {
             return;
         }
         // String data = "<h1> Hello World </h1><p> This is a video </p>";
-         
-        response.setHeaders("Content-Type", "video/mp4")
+        
+        System.out.println("[Angie] start send video");
+        
+        response.setHeaders("Content-Length", String.valueOf(data.length))
+                .setHeaders("Content-Type", "video/mp4; charset-utf-8")
+                .setHeaders("Access-Control-Allow-Origin", "*")
                 // .setStatus(206)
                 .send(data);
         
         System.out.println("[Angie] send video success");
     }
 
+    private String getVideoPath(String userId, String videoId) {
+        return "./video.mp4";
+    }
+
     private byte[] getEntireVideoData(String userId, String videoId) {
-        String path = "./video.mp4";
-        FileInputStream fileInputStream = null;
         byte[] data = null;
+        
         try {
-            fileInputStream = new FileInputStream(path);
-            data = new byte[fileInputStream.available()];
-            fileInputStream.read(data);
-        } catch (Exception e) {
-            System.out.println("Error: " + "File Transfer Error");
-            // e.printStackTrace();
-        } finally {
-            if (fileInputStream != null) {
-                try {
-                    fileInputStream.close();
-                } catch (Exception e) {
-                    System.out.println("Error: " + "File Stream Release Error");
-                    // e.printStackTrace();
-                }
-            }
+            String path = getVideoPath(userId, videoId);
+            data = Files.readAllBytes(Paths.get(path));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return data;
@@ -49,7 +47,7 @@ public class ApplyVideo implements Processor {
 
     private byte[] getRandomVideoData(String userId, String videoId) {
         // get video data by (userId, videoId)
-        String path = "./video.mp4";
+        String path = getVideoPath(userId, videoId);
         File imgFile = new File(path);
         if (!imgFile.exists()) {
             return null;
