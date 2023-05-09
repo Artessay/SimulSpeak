@@ -14,10 +14,7 @@ public class Request {
 
     public Request(InputStream inputStream){
         try {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-
-            // analyse GET request
-            String[] requestLine =  bufferedReader.readLine().split(" ");
+            String[] requestLine =  new BufferedReader(new InputStreamReader(inputStream)).readLine().split(" ");
             if (requestLine.length == 3 && requestLine[2].equals("HTTP/1.1")) {
                 this.method = requestLine[0];
                 String fullUrl = requestLine[1];
@@ -36,9 +33,6 @@ public class Request {
                     this.url = fullUrl;
                 }
             }
-
-            // analyse POST request
-            //
         } catch (IOException e) {
             e.printStackTrace();
         }

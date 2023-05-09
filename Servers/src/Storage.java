@@ -20,23 +20,23 @@ import java.util.concurrent.Executors;
 public class Storage {
 
 	public static void main(String[] args) {
-        //±£´æ¿Í»§¶Ë´¦ÀíµÄÏß³Ì
+        //ï¿½ï¿½ï¿½ï¿½Í»ï¿½ï¿½Ë´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½
         Vector<Usthread> vector = new Vector <>();
-        //¹Ì¶¨´óÐ¡µÄÏß³Ì³Ø£¬ÓÃÀ´´¦Àí²»Í¬¿Í»§¶Ë
+        //ï¿½Ì¶ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ß³Ì³Ø£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½Í»ï¿½ï¿½ï¿½
         ExecutorService es = Executors.newFixedThreadPool(10);
-        //´´½¨·þÎñÆ÷¶ËµÄSocket
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½Socket
         try {
             ServerSocket server = new ServerSocket(8888);
-            System.out.println("·þÎñÆ÷ÒÔÆô¶¯£¬ÕýÔÚµÈ´ýÁ¬½Ó...");
+            System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÚµÈ´ï¿½ï¿½ï¿½ï¿½ï¿½...");
             while(true){
-                //½ÓÊÜ¿Í»§¶ËµÄSocket£¬ÈôÃ»ÓÐ£¬×èÈûÔÚÕâ
+                //ï¿½ï¿½ï¿½Ü¿Í»ï¿½ï¿½Ëµï¿½Socketï¿½ï¿½ï¿½ï¿½Ã»ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 Socket socket = server.accept();
-                //Ã¿À´Ò»¸ö¿Í»§¶Ë£¬´´½¨Ò»¸öÏß³Ì´¦ÀíËü
+                //Ã¿ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Í»ï¿½ï¿½Ë£ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ß³Ì´ï¿½ï¿½ï¿½ï¿½ï¿½
                 System.out.println("yes");
                 
                 Usthread user = new Usthread(socket);
                 vector.add(user);
-                es.execute(user);  //¿ªÆôÏß³Ì
+                es.execute(user);  //ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,14 +45,14 @@ public class Storage {
 }
  
 /**
- * ¿Í»§¶Ë´¦ÀíÏß³Ì£º
+ * ï¿½Í»ï¿½ï¿½Ë´ï¿½ï¿½ï¿½ï¿½ß³Ì£ï¿½
  */
 class Usthread implements Runnable{
 	
-    private Socket socket; //µ±Ç°¿Í»§¶ËµÄSocket
-    private ObjectInputStream oIn;    //ÊäÈëÁ÷
+    private Socket socket; //ï¿½ï¿½Ç°ï¿½Í»ï¿½ï¿½Ëµï¿½Socket
+    private ObjectInputStream oIn;    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     private DataInputStream In;
-    private DataOutputStream oOut;  //Êä³öÁ÷
+    private DataOutputStream oOut;  //ï¿½ï¿½ï¿½ï¿½ï¿½
     private File imgFile = null;
     private int storageid = 1;
     
@@ -125,7 +125,7 @@ class Usthread implements Runnable{
         }
         File file1 = new File(".\\data\\" + useId + "\\" + videoId);
         if(!file1 .exists()) {
-            file1.mkdirs();//´´½¨¶à²ã¼¶Ä¿Â¼
+            file1.mkdirs();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã¼¶Ä¿Â¼
         }
 	}
 	
@@ -167,18 +167,18 @@ class Usthread implements Runnable{
 	public void StoreData(String path) throws IOException {
 		long lengths = In.readLong();
         if(lengths > 0){
-            // ´´½¨×Ö½ÚÊý×é
+            // ï¿½ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½ï¿½ï¿½
             byte[] bt = new byte[(int) lengths];
             System.out.println("!!!!" + lengths);
             for (int i = 0; i < bt.length; i++) {
-                bt[i] = In.readByte();// ¶ÁÈ¡×Ö½ÚÐÅÏ¢²¢´æ´¢µ½×Ö½ÚÊý×é
+                bt[i] = In.readByte();// ï¿½ï¿½È¡ï¿½Ö½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½æ´¢ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½ï¿½ï¿½
             }
             System.out.println("!!!!" + lengths);
             File img = new File(path);
             if(!img.exists()) img.createNewFile();
             OutputStream out = new DataOutputStream(new FileOutputStream(img));
             out.write(bt);
-            System.out.println("ÎÄ¼þ½ÓÊÕ³É¹¦£¡£¡");
+            System.out.println("ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Õ³É¹ï¿½ï¿½ï¿½ï¿½ï¿½");
         }
         oOut.writeUTF("ok!!");
 	}
@@ -219,37 +219,37 @@ class Usthread implements Runnable{
 		imgFile = new File(path);
 		long lengths;
         try {
-            DataInputStream inStream = null;// ¶¨ÒåÊý¾ÝÊäÈëÁ÷¶ÔÏó
+            DataInputStream inStream = null;// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             if (imgFile != null) {
-                lengths = imgFile.length();// »ñµÃÑ¡ÔñÍ¼Æ¬µÄ´óÐ¡
-                inStream = new DataInputStream(new FileInputStream(imgFile));// ´´½¨ÊäÈëÁ÷¶ÔÏó
+                lengths = imgFile.length();// ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Í¼Æ¬ï¿½Ä´ï¿½Ð¡
+                inStream = new DataInputStream(new FileInputStream(imgFile));// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             } else {
-                System.out.println("Ã»ÓÐÑ¡ÔñÎÄ¼þ¡£");
+                System.out.println("Ã»ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½");
                 return;
             }
-            String head = "HTTP/1.1 200\n"
-                    + "Content-Type: video/mpeg4\n"
-            		+ "Content-Length: " + lengths
-                    + "\n";
+            // String head = "HTTP/1.1 200\n"
+            //         + "Content-Type: video/mpeg4\n"
+            // 		+ "Content-Length: " + lengths
+            //         + "\n";
 //            long headlen = head.getBytes().length;
-//        //    oOut.writeLong(lengths + headlen);// ½«ÎÄ¼þµÄ´óÐ¡Ð´ÈëÊä³öÁ÷
+//        //    oOut.writeLong(lengths + headlen);// ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ä´ï¿½Ð¡Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //         //   System.out.println(lengths + headlen);
-            byte[] bt = new byte[(int) lengths];// ´´½¨×Ö½ÚÊý×é
+            byte[] bt = new byte[(int) lengths];// ï¿½ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½ï¿½ï¿½
             int len = -1;
-            oOut.write(head.getBytes());
-            while ((len = inStream.read(bt)) != -1) {// ½«Í¼Æ¬ÎÄ¼þ¶ÁÈ¡µ½×Ö½ÚÊý×é
+            // oOut.write(head.getBytes());
+            while ((len = inStream.read(bt)) != -1) {// ï¿½ï¿½Í¼Æ¬ï¿½Ä¼ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½ï¿½ï¿½
             	oOut.write(bt);
             }
-            System.out.println("ÎÄ¼þ·¢ËÍ³É¹¦£¡£¡");
+            System.out.println("ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Í³É¹ï¿½ï¿½ï¿½ï¿½ï¿½");
         } catch (IOException e1) {
             e1.printStackTrace();
         }
 	}
 //	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 //		      throws ServletException, IOException {
-//		    File videoFile = new File("/path/to/video.mp4"); // ÊÓÆµÎÄ¼þÎ»ÖÃ
-//		    long size = videoFile.length(); // ÊÓÆµÎÄ¼þ×Ü´óÐ¡
-//		    String range = request.getHeader("Range"); // ´Ó Header ÖÐ»ñÈ¡ Range ×Ö¶Î£¬¸ñÊ½£ºbytes=0-100£¬±íÊ¾ÐèÒª´«ÊäµÄÊý¾Ý·¶Î§
+//		    File videoFile = new File("/path/to/video.mp4"); // ï¿½ï¿½Æµï¿½Ä¼ï¿½Î»ï¿½ï¿½
+//		    long size = videoFile.length(); // ï¿½ï¿½Æµï¿½Ä¼ï¿½ï¿½Ü´ï¿½Ð¡
+//		    String range = request.getHeader("Range"); // ï¿½ï¿½ Header ï¿½Ð»ï¿½È¡ Range ï¿½Ö¶Î£ï¿½ï¿½ï¿½Ê½ï¿½ï¿½bytes=0-100ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½Î§
 //		    long start = 0, end = size - 1, contentLength = size;
 //		    if (range != null && range.startsWith("bytes=") && range.contains("-")) {
 //		      range = range.substring(6);
@@ -276,7 +276,7 @@ class Usthread implements Runnable{
 //		    outputStream.close();
 //		 }
 //	public void play(String path, HttpServletRequest request, HttpServletResponse response) {
-//        //»ñÈ¡ÊÓÆµÎÄ¼þÁ÷
+//        //ï¿½ï¿½È¡ï¿½ï¿½Æµï¿½Ä¼ï¿½ï¿½ï¿½
 //        FileInputStream fileInputStream = null;
 //        OutputStream outputStream = null;
 //        

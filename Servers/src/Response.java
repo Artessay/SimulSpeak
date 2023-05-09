@@ -38,23 +38,4 @@ public class Response {
             e.printStackTrace();
         }
     }
-
-    public void send(byte[] data) {
-        try {
-            StringBuilder dataBuilder = new StringBuilder();
-            dataBuilder.append("HTTP/1.1 ").append(this.status).append("\n");
-            for (String key:
-                 this.headers.keySet()) {
-                dataBuilder.append(key).append(": ").append(this.headers.get(key)).append("\n");
-            }
-            dataBuilder.append("\n");
-
-            outputStream.write(dataBuilder.toString().getBytes());
-            outputStream.write(data);
-            outputStream.flush();
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
