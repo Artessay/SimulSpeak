@@ -2,10 +2,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
+
+
 public class Request {
     private String url;
     private String params;
     private String method;
+    private Map<String, String> paramMap = new HashMap<String, String>();
 
     public Request(InputStream inputStream){
         try {
@@ -16,6 +21,14 @@ public class Request {
                 if (fullUrl.contains("?")) {
                     this.url = fullUrl.substring(0, fullUrl.indexOf("?"));
                     this.params = fullUrl.substring(fullUrl.indexOf("?") + 1);
+
+                    String[] keyValues = this.params.split("&");
+                    for (String keyValue : keyValues) {
+                        String[] pair = keyValue.split("=");
+                        if (pair.length == 2) {
+                            paramMap.put(pair[0], pair[1]);
+                        }
+                    }
                 } else {
                     this.url = fullUrl;
                 }
@@ -27,6 +40,20 @@ public class Request {
 
     public String getUrl() {
         return url;
+    }
+
+    /**
+     * Returns the value to which the specified key is mapped,
+     * or {@code null} if this map contains no mapping for the key.
+     *
+     * @param key the key whose associated value is to be returned
+     * @return the value to which the specified key is mapped, or
+     *         {@code null} if this map contains no mapping for the key
+     * @throws ClassCastException if the key is of an inappropriate type for
+     *         this map
+     */
+    public String getParam(String key) {
+        return paramMap.get(key);
     }
 
     public String getParams() {
