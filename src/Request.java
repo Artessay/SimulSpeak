@@ -44,10 +44,10 @@ public class Request {
                     
                     if (keyValue.length == 2) {
                         headerMap.put(keyValue[0], keyValue[1]);
-                        System.out.println(keyValue[0] + ": " + keyValue[1]);
+                        // System.out.println(keyValue[0] + ": " + keyValue[1]);
                     }
                 }
-                System.out.println("");
+                // System.out.println("");
             }
 
         } catch (IOException e) {

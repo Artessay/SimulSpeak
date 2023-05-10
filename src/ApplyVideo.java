@@ -77,12 +77,12 @@ public class ApplyVideo implements Processor {
             } else {
                 requestEnd = fileLength - 1;
             }
-            System.out.println("requestStart: " + requestStart);
-            System.out.println("requestEnd: " + requestEnd);
+            // System.out.println("requestStart: " + requestStart);
+            // System.out.println("requestEnd: " + requestEnd);
 
             long requestSize = requestEnd - requestStart + 1;
             if (requestSize < 0 || requestSize > Integer.MAX_VALUE) {
-                System.out.println("Error: " + "File Size Error " + requestStart + " - " + requestEnd);
+                System.out.println("[Angie] Error: " + "File Size Error " + requestStart + " - " + requestEnd);
                 response.setStatus(503).send("Server Error");
                 return;
             }
