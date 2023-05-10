@@ -11,12 +11,12 @@ public class Request {
     private String params;
     private String method;
     private Map<String, String> paramMap = new HashMap<String, String>();
+    private Map<String, String> headerMap = new HashMap<String, String>();
 
     public Request(InputStream inputStream){
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-            // analyse GET request
             String[] requestLine =  bufferedReader.readLine().split(" ");
 
             if (requestLine.length == 3 && requestLine[2].equals("HTTP/1.1")) {
@@ -26,7 +26,7 @@ public class Request {
                     this.url = fullUrl.substring(0, fullUrl.indexOf("?"));
                     this.params = fullUrl.substring(fullUrl.indexOf("?") + 1);
 
-                    System.out.println(method + " " + url + " " + params);
+                    // System.out.println(method + " " + url + " " + params);
 
                     String[] keyValues = this.params.split("&");
                     for (String keyValue : keyValues) {
@@ -38,10 +38,18 @@ public class Request {
                 } else {
                     this.url = fullUrl;
                 }
+
+                while (bufferedReader.ready()) {
+                    String[] keyValue = bufferedReader.readLine().split(": ");
+                    
+                    if (keyValue.length == 2) {
+                        headerMap.put(keyValue[0], keyValue[1]);
+                        System.out.println(keyValue[0] + ": " + keyValue[1]);
+                    }
+                }
+                System.out.println("");
             }
 
-            // analyse POST request
-            //
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -71,5 +79,19 @@ public class Request {
 
    public String getMethod() {
         return method;
+    }
+
+    /**
+     * Returns the value to which the specified key is mapped,
+     * or {@code null} if this map contains no mapping for the key.
+     *
+     * @param key the key whose associated value is to be returned
+     * @return the value to which the specified key is mapped, or
+     *         {@code null} if this map contains no mapping for the key
+     * @throws ClassCastException if the key is of an inappropriate type for
+     *         this map
+     */
+    public String getHeader(String key) {
+        return headerMap.get(key);
     }
 }

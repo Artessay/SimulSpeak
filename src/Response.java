@@ -6,10 +6,12 @@ public class Response {
     private OutputStream outputStream;
     private HashMap<String, String> headers = new HashMap<>();
     private int status;
+    private String method;
 
     public Response(OutputStream outputStream) {
         this.outputStream = outputStream;
         this.status = 200;
+        this.method = null;
     }
 
     public Response setHeaders(String key, String value) {
@@ -22,12 +24,23 @@ public class Response {
         return this;
     }
 
+    public Response setMethod(String method) {
+        this.method = method;
+        return this;
+    }
+
     public void send(String data) {
         try {
             StringBuilder dataBuilder = new StringBuilder();
-            dataBuilder.append("HTTP/1.1 ").append(this.status).append("\n");
+
+            dataBuilder.append("HTTP/1.1 ").append(this.status);
+            if (this.method != null) {
+                dataBuilder.append(" ").append(this.method);
+            }
+            dataBuilder.append("\n");
+            
             for (String key:
-                 this.headers.keySet()) {
+                this.headers.keySet()) {
                 dataBuilder.append(key).append(": ").append(this.headers.get(key)).append("\n");
             }
             dataBuilder.append("\n").append(data);
@@ -50,7 +63,7 @@ public class Response {
             }
             dataBuilder.append("\n");
 
-            System.out.println(dataBuilder);
+            // System.out.println(dataBuilder);
 
             outputStream.write(dataBuilder.toString().getBytes());
             outputStream.write(data);

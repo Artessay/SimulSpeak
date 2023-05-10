@@ -5,61 +5,82 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class ApplyVideo implements Processor {
+    private Request request;
+    private Response response;
+
     @Override
     public void callback(Request request, Response response) {
-        String userId = request.getParam("uid");
-        String videoId = request.getParam("vid");
+        this.request = request;
+        this.response = response;
         
-        byte[] data = getEntireVideoData(userId, videoId);
-        if (data == null) {
-            response.setStatus(404).send("Video not found");
-            return;
+        String rangeString = request.getHeader("Range");
+
+        if (rangeString == null) {
+            sendEntireVideoData();
+        } else {
+            sendRandomVideoData(rangeString);
         }
-        // String data = "<h1> Hello World </h1><p> This is a video </p>";
-        
-        System.out.println("[Angie] start send video");
-        
-        response.setHeaders("Content-Length", String.valueOf(data.length))
-                .setHeaders("Content-Type", "video/mp4; charset-utf-8")
-                .setHeaders("Access-Control-Allow-Origin", "*")
-                // .setStatus(206)
-                .send(data);
-        
-        System.out.println("[Angie] send video success");
     }
 
-    private String getVideoPath(String userId, String videoId) {
-        return "./video.mp4";
-    }
-
-    private byte[] getEntireVideoData(String userId, String videoId) {
+    private void sendEntireVideoData() {
         byte[] data = null;
         
         try {
-            String path = getVideoPath(userId, videoId);
+            String path = getVideoPath();
             data = Files.readAllBytes(Paths.get(path));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return data;
+        if (data == null) {
+            response.setStatus(404).send("Video not found");
+            return;
+        }
+
+        System.out.println("[Angie] start send video");
+            
+        response.setHeaders("Content-Length", String.valueOf(data.length))
+                .setHeaders("Content-Type", "video/mp4; charset-utf-8")
+                .setHeaders("Access-Control-Allow-Origin", "*")
+                .send(data);
+        
+        System.out.println("[Angie] send video success");
     }
 
-    private byte[] getRandomVideoData(String userId, String videoId) {
-        // get video data by (userId, videoId)
-        String path = getVideoPath(userId, videoId);
-        File imgFile = new File(path);
-        if (!imgFile.exists()) {
-            return null;
+    private void sendRandomVideoData(String rangeString) {
+        // get video data
+        String path = getVideoPath();
+        File file = new File(path);
+        if (!file.exists()) {
+            response.setStatus(404).send("Video not found");
+            return;
         }
         
         RandomAccessFile targetFile = null;
         byte[] data = null;
         try {
-            targetFile = new RandomAccessFile(imgFile, "r");
-            long fileLength = targetFile.length();
+            targetFile = new RandomAccessFile(file, "r");
 
+            // process Range
+            System.out.println(rangeString);
+            String ranges[] = rangeString.split("-");
+            long requestStart, requestEnd;
+            requestStart = Long.parseLong(ranges[0]);
+            if (ranges.length > 1) {
+                requestEnd = Long.parseLong(ranges[1]);
+            } else {
+                requestEnd = targetFile.length() - 1;
+            }
+            long requestSize = requestEnd - requestStart + 1;
+            if (requestSize < 0 || requestSize > Integer.MAX_VALUE) {
+                System.out.println("Error: " + "File Size Error " + requestStart + " - " + requestEnd);
+                response.setStatus(503).send("Server Error");
+                return;
+            }
 
+            targetFile.seek(requestStart);
+            data = new byte[(int) requestSize];
+            targetFile.read(data, 0, (int)requestSize);
         } catch (Exception e) {
             System.out.println("Error: " + "File Transfer Error");
             // e.printStackTrace();
@@ -74,6 +95,30 @@ public class ApplyVideo implements Processor {
             }
         }
 
-        return data;
+        if (data == null) {
+            response.setStatus(404).send("Video not found");
+            return;
+        }
+        
+        System.out.println("[Angie] start send video");
+            
+        response.setStatus(206)
+                .setHeaders("Content-Length", String.valueOf(data.length))
+                .setHeaders("Content-Type", "video/mp4; charset-utf-8")
+                .setHeaders("Content-Range", "bytes ")
+                .setHeaders("Access-Control-Allow-Origin", "*")
+                .send(data);
+        
+        System.out.println("[Angie] send video success");
+    }
+    
+    private String getVideoPath() {
+        String userId = request.getParam("uid");
+        String videoId = request.getParam("vid");
+        if (userId == null || videoId == null) {
+            return null;
+        }
+
+        return "./video.mp4";
     }
 }
