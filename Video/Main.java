@@ -14,6 +14,8 @@ public class Main {
             System.out.println("good");
         });
 
+        System.out.println("[Aigen] server start");
         app.listen(80);
+        System.out.println("[Aigen] server stop");
     }
 }

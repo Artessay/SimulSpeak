@@ -26,40 +26,35 @@ public class Request {
                     this.url = fullUrl.substring(0, fullUrl.indexOf("?"));
                     this.params = fullUrl.substring(fullUrl.indexOf("?") + 1);
 
-                    // System.out.println(method + " " + url + " " + params);
+                    System.out.println(method + " " + url + " " + params);
 
                     String[] keyValues = this.params.split("&");
                     for (String keyValue : keyValues) {
                         String[] pair = keyValue.split("=");
                         if (pair.length == 2) {
                             paramMap.put(pair[0], pair[1]);
-                            System.out.println(pair[0] + ": " + pair[1]);
                         }
                     }
                 } else {
                     this.url = fullUrl;
                 }
 
-                System.out.println("[Angie]");
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    System.out.println(line);
-                }
-                // while (bufferedReader.ready()) {
-                //     String[] keyValue = bufferedReader.readLine().split(": ");
-                    
-                //     if (keyValue.length == 2) {
-                //         headerMap.put(keyValue[0], keyValue[1]);
-                //         // System.out.println(keyValue[0] + ": " + keyValue[1]);
-                //     }
-                // }
-                System.out.println("");
+                while (bufferedReader.ready()) {
+                    String[] keyValue = bufferedReader.readLine().split(": ");
 
-                while ((line = bufferedReader.readLine()) != null) {
-                    System.out.println(line);
+                    if (keyValue.length == 2) {
+                        headerMap.put(keyValue[0], keyValue[1]);
+                        // System.out.println(keyValue[0] + ": " + keyValue[1]);
+                    }
                 }
-                System.out.println("");
             }
+
+            
+            // String line;
+            // while ((line = bufferedReader.readLine()) != null) {
+            //     System.out.println(line);
+            // }
+            // System.out.println("");
 
         } catch (IOException e) {
             e.printStackTrace();

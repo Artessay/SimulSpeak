@@ -29,7 +29,7 @@ public class ApplyVideo implements Processor {
             String path = getVideoPath();
             data = Files.readAllBytes(Paths.get(path));
         } catch (IOException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
 
         if (data == null) {
@@ -126,9 +126,9 @@ public class ApplyVideo implements Processor {
     private String getVideoPath() {
         String userId = request.getParam("uid");
         String videoId = request.getParam("vid");
-        // if (userId == null || videoId == null) {
-        //     // return null;
-        // }
+        if (userId == null || videoId == null) {
+            // return null;
+        }
 
         return "./video.mp4";
     }

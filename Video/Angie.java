@@ -18,6 +18,7 @@ public class Angie {
                     try {
                         Request request = new Request(client.getInputStream());
                         Response response = new Response(client.getOutputStream());
+                        System.out.println("URL: " + request.getUrl());
                         if (routeMap.containsKey(request.getUrl())) {
                             routeMap.get(request.getUrl()).callback(request, response);
                         } else {

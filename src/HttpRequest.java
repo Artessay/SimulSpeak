@@ -17,8 +17,8 @@ public class HttpRequest {
 
         HttpRequest http = new HttpRequest();
 
-        // System.out.println("Testing 1 - Send Http GET request");
-        // http.PostLogin("myl","123456");
+        System.out.println("Testing 1 - Send Http GET request");
+        http.sendGet();
 
         System.out.println("Testing 2 - Send Http POST request");
         http.PostLogin("myl","123456");
@@ -114,12 +114,15 @@ public class HttpRequest {
         String urlParameters="User="+User+"&Password="+Password;
         System.out.println(urlParameters);
 
+        con.setDoInput(true);
         con.setDoOutput(true);
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());
         wr.writeBytes(urlParameters);
         wr.flush();
         wr.close();
+        System.out.println("Hello");
         int responseCode = con.getResponseCode();
+        System.out.println(responseCode);
         System.out.println("\nSending 'POST' request to URL : " + url);
         System.out.println("Post parameters : " + urlParameters);
         System.out.println("Response Code : " + responseCode);

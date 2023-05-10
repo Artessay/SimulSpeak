@@ -63,7 +63,7 @@ public class Response {
             }
             dataBuilder.append("\n");
 
-            // System.out.println(dataBuilder);
+            System.out.println(dataBuilder);
 
             outputStream.write(dataBuilder.toString().getBytes());
             outputStream.write(data);

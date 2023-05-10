@@ -43,11 +43,9 @@ public class Response {
                 this.headers.keySet()) {
                 dataBuilder.append(key).append(": ").append(this.headers.get(key)).append("\n");
             }
-            // dataBuilder.append("\n").append(data);
-            dataBuilder.append("\n");
+            dataBuilder.append("\n").append(data);
 
             outputStream.write(dataBuilder.toString().getBytes());
-            outputStream.write(data.getBytes());
             outputStream.flush();
             outputStream.close();
         } catch (IOException e) {
@@ -65,7 +63,7 @@ public class Response {
             }
             dataBuilder.append("\n");
 
-            System.out.println(dataBuilder);
+            // System.out.println(dataBuilder);
 
             outputStream.write(dataBuilder.toString().getBytes());
             outputStream.write(data);
