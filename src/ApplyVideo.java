@@ -50,6 +50,8 @@ public class ApplyVideo implements Processor {
     private void sendRandomVideoData(String rangeString) {
         // get video data
         String path = getVideoPath();
+        // System.out.println("path: " + path);
+
         File file = new File(path);
         if (!file.exists()) {
             response.setStatus(404).send("Video not found");
@@ -58,19 +60,26 @@ public class ApplyVideo implements Processor {
         
         RandomAccessFile targetFile = null;
         byte[] data = null;
+        long fileLength = 0, requestStart = 0, requestEnd = 0;
+
         try {
             targetFile = new RandomAccessFile(file, "r");
+            fileLength = targetFile.length();
 
             // process Range
-            System.out.println(rangeString);
+            // System.out.println(rangeString);
             String ranges[] = rangeString.split("-");
-            long requestStart, requestEnd;
-            requestStart = Long.parseLong(ranges[0]);
+            // example: bytes=0-100, bytes=0- 
+            
+            requestStart = Long.parseLong(ranges[0].substring(6));
             if (ranges.length > 1) {
                 requestEnd = Long.parseLong(ranges[1]);
             } else {
-                requestEnd = targetFile.length() - 1;
+                requestEnd = fileLength - 1;
             }
+            System.out.println("requestStart: " + requestStart);
+            System.out.println("requestEnd: " + requestEnd);
+
             long requestSize = requestEnd - requestStart + 1;
             if (requestSize < 0 || requestSize > Integer.MAX_VALUE) {
                 System.out.println("Error: " + "File Size Error " + requestStart + " - " + requestEnd);
@@ -103,9 +112,11 @@ public class ApplyVideo implements Processor {
         System.out.println("[Angie] start send video");
             
         response.setStatus(206)
+                .setMethod("Partial Content")
                 .setHeaders("Content-Length", String.valueOf(data.length))
                 .setHeaders("Content-Type", "video/mp4; charset-utf-8")
-                .setHeaders("Content-Range", "bytes ")
+                .setHeaders("Accept-Range", "bytes")
+                .setHeaders("Content-Range", "bytes " + requestStart + "-" + requestEnd + "/" + fileLength)
                 .setHeaders("Access-Control-Allow-Origin", "*")
                 .send(data);
         
