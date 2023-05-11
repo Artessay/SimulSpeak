@@ -69,12 +69,15 @@ def get_speech_timestamps(audio: torch.Tensor,
     speech_pad_samples = sampling_rate * speech_pad_ms / 1000
 
     audio_length_samples = len(audio)
+    
+    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     speech_probs = []
     for current_start_sample in range(0, audio_length_samples, window_size_samples):
         chunk = audio[current_start_sample: current_start_sample + window_size_samples]
         if len(chunk) < window_size_samples:
             chunk = torch.nn.functional.pad(chunk, (0, int(window_size_samples - len(chunk))))
+        # chunk.to(device)
         speech_prob = model(chunk, sampling_rate).item()
         speech_probs.append(speech_prob)
 

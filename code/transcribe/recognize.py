@@ -10,11 +10,16 @@ from streamReader import open_stream
 
 DEBUG = True
 
+import time
+
 class Recognizer():
     def __init__(self) -> None:
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        self.model = load_model('medium')
-        # self.model = load_model('large')
+        # self.device = torch.device("cpu")
+        print(f"[whisper] Using {self.device}")
+        # self.model = load_model()
+        self.model = load_model('medium', torch.device("cpu"))
+        # self.model = load_model('large', device=self.device)
 
     def input_stream(
             self,
@@ -33,7 +38,7 @@ class Recognizer():
             **decode_options
     ):
         if DEBUG: print("[whisper] Recognizing...")
-        
+        print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
         model = self.model
         device = self.device
         ffmpeg_process = self.ffmpeg_process
@@ -42,7 +47,7 @@ class Recognizer():
         # Voice Activity Detection
         if use_vad:
             from VoiceActivityDetection import VoiceActivityDetection
-            vad = VoiceActivityDetection(device)
+            vad = VoiceActivityDetection(device=torch.device("cpu"))
 
         n_bytes = interval * SAMPLE_RATE * 2  # Factor 2 comes from reading the int16 stream as bytes
         audio_buffer = RingBuffer((history_buffer_size // interval) + 1)
@@ -96,10 +101,10 @@ class Recognizer():
             if streamlink_process:
                 streamlink_process.kill()
     
-def load_model(model = "small"):
+def load_model(model = "small", device = None):
     # Load Whisper Model
     if DEBUG: print("[whisper] Loading model...")
-    model = whisper.load_model(model, download_root='./model')
+    model = whisper.load_model(model, device=device, download_root='./model')
 
     return model
 
@@ -125,4 +130,5 @@ if __name__ == '__main__':
     # recognize('./nobel.mp4')
     recognizer = Recognizer()
     recognizer.input_stream('./audio.mp3')
+    # recognizer.input_stream('./video.mp4')
     recognizer.speech_recognition()
