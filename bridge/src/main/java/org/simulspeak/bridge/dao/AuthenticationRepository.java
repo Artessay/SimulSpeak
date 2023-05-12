@@ -13,4 +13,6 @@ public interface AuthenticationRepository extends JpaRepository<UserAuth, Long> 
 
     UserAuth findByUserInfoAndIdentityType(UserInfo userInfo, String identityType);
 
+    UserAuth findByIdentityTypeAndIdentifierAndCredential(String identityType, String identifier, String credential);
+
 }
