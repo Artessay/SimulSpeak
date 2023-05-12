@@ -6,9 +6,15 @@ import java.io.IOException;
 import java.net.Socket;
 
 import org.simulspeak.bridge.configuration.BridgeConfig;
+import org.simulspeak.bridge.configuration.NetAddress;
+import org.simulspeak.bridge.dao.UserRepository;
+import org.simulspeak.bridge.dao.VideoRepository;
+import org.simulspeak.bridge.domain.UserInfo;
+import org.simulspeak.bridge.domain.VideoInfo;
 import org.simulspeak.bridge.service.VideoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +23,12 @@ public class StorageImplement implements VideoService {
     private Socket socket;
     private DataInputStream fromServer;
     private DataOutputStream toServer;
+
+    @Autowired
+    private VideoRepository videoRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private final static Logger logger = LoggerFactory.getLogger(StorageImplement.class);
 
@@ -38,7 +50,7 @@ public class StorageImplement implements VideoService {
         }
     }
     
-    public boolean uploadVideo(String videoName, Long userId) {
+    public boolean uploadVideo(String videoName, Long userId, NetAddress address) {
         if (videoName == null || userId == BridgeConfig.ERROR_USER_ID) {
             logger.debug("upload video parameter is null");
             return false;
@@ -49,6 +61,19 @@ public class StorageImplement implements VideoService {
             return false;
         }
         
+        UserInfo userInfo = userRepository.findByUserId(userId);
+        if (userInfo == null) {
+            logger.error("user does not exist");
+            return false;
+        }
+
+        VideoInfo videoInfo;
+        videoInfo = videoRepository.findByVideoNameAndUserInfo(videoName, userInfo);
+        if (videoInfo != null) {
+            logger.debug("video {} has already existed", videoName);
+            return false;
+        }
+        
         try {
             toServer.writeUTF("upload");
 
@@ -56,16 +81,49 @@ public class StorageImplement implements VideoService {
             String port = fromServer.readUTF();
 
             logger.debug(ip + " : " + port);
+
+            address.setIp(ip);
+            address.setPort(port);
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("[client] upload video failed");
+            return false;
         }
+
+        videoInfo = new VideoInfo(videoName);
+
+        videoInfo.setUserInfo(userInfo);
+        videoRepository.saveAndFlush(videoInfo);
 
         return true;
     }
     
-    public void requestVideo(String videoName, Long userId) {
-        Long videoId = 1L;
+    public boolean requestVideo(String videoName, Long userId, NetAddress address) {
+        if (videoName == null || userId == BridgeConfig.ERROR_USER_ID) {
+            logger.debug("request video parameter is null");
+            return false;
+        }
+
+        if (socket == null || toServer == null || fromServer == null) {
+            logger.debug("socket does not connected");
+            return false;
+        }
+
+        UserInfo userInfo = userRepository.findByUserId(userId);
+        if (userInfo == null) {
+            logger.error("user does not exist");
+            return false;
+        }
+
+        VideoInfo videoInfo;
+        videoInfo = videoRepository.findByVideoNameAndUserInfo(videoName, userInfo);
+        if (videoInfo == null) {
+            logger.debug("video {} does not exist", videoName);
+            return false;
+        }
+
+        Long videoId = videoInfo.getVideoId();
+
         try {
             toServer.writeUTF("apply");
             toServer.writeLong(userId);
@@ -74,10 +132,17 @@ public class StorageImplement implements VideoService {
             String ip = fromServer.readUTF();
             String port = fromServer.readUTF();
 
-            System.out.println(ip + " : " + port);
+            logger.debug(ip + " : " + port);
+
+            address.setIp(ip);
+            address.setPort(port);
         } catch (IOException e) {
             e.printStackTrace();
+            logger.error("[client] upload video failed");
+            return false;
         }
+
+        return true;
     }
 
 }
