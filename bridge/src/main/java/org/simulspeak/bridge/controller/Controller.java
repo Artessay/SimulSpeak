@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/admin")
 public class Controller {
 
     @Autowired
@@ -33,7 +33,7 @@ public class Controller {
         return map;
     }
 
-    @GetMapping("/uploadVideo")
+    @GetMapping("/requestVideo")
     public Map<String, Object> requestVideo(String videoName, Long userId) {
         Map<String, Object> map;
 

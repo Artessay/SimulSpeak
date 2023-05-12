@@ -21,7 +21,9 @@ import org.springframework.stereotype.Service;
 public class StorageImplement implements VideoService {
     
     private Socket socket;
+
     private DataInputStream fromServer;
+
     private DataOutputStream toServer;
 
     @Autowired
@@ -32,7 +34,29 @@ public class StorageImplement implements VideoService {
 
     private final static Logger logger = LoggerFactory.getLogger(StorageImplement.class);
 
-    public StorageImplement() {
+    /**
+     * In order to speed up the connection time, we don't create the socket when the
+     * server starts. Instead, we create the socket when the first request comes.
+     */
+    // public StorageImplement() {
+    //     // create connection
+    //     try {
+    //         // Create a socket to connect to the server
+    //         socket = new Socket("192.168.137.78", 9999);
+
+    //         // create a output stream to send data to the server
+    //         toServer = new DataOutputStream(socket.getOutputStream());
+
+    //         // Create an input stream to receive data from the server
+    //         fromServer = new DataInputStream(socket.getInputStream());
+    //     }
+    //     catch (IOException ex) {
+    //         ex.printStackTrace();
+    //         logger.error("[client] create socket failed");
+    //     }
+    // }
+
+    private void connectStorageServer() {
         // create connection
         try {
             // Create a socket to connect to the server
@@ -43,21 +67,16 @@ public class StorageImplement implements VideoService {
 
             // Create an input stream to receive data from the server
             fromServer = new DataInputStream(socket.getInputStream());
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
             logger.error("[client] create socket failed");
         }
     }
-    
+
+    @Override
     public boolean uploadVideo(String videoName, Long userId, NetAddress address) {
         if (videoName == null || userId == BridgeConfig.ERROR_USER_ID) {
             logger.debug("upload video parameter is null");
-            return false;
-        }
-
-        if (socket == null || toServer == null || fromServer == null) {
-            logger.debug("socket does not connected");
             return false;
         }
         
@@ -72,6 +91,10 @@ public class StorageImplement implements VideoService {
         if (videoInfo != null) {
             logger.debug("video {} has already existed", videoName);
             return false;
+        }
+
+        if (socket == null || toServer == null || fromServer == null) {
+            connectStorageServer();
         }
         
         try {
@@ -98,14 +121,10 @@ public class StorageImplement implements VideoService {
         return true;
     }
     
+    @Override
     public boolean requestVideo(String videoName, Long userId, NetAddress address) {
         if (videoName == null || userId == BridgeConfig.ERROR_USER_ID) {
             logger.debug("request video parameter is null");
-            return false;
-        }
-
-        if (socket == null || toServer == null || fromServer == null) {
-            logger.debug("socket does not connected");
             return false;
         }
 
@@ -123,6 +142,10 @@ public class StorageImplement implements VideoService {
         }
 
         Long videoId = videoInfo.getVideoId();
+
+        if (socket == null || toServer == null || fromServer == null) {
+            connectStorageServer();
+        }
 
         try {
             toServer.writeUTF("apply");
