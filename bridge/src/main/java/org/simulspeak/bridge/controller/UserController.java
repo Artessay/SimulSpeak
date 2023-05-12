@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.simulspeak.bridge.configuration.IdentityType;
 import org.simulspeak.bridge.dao.UserRepository;
 import org.simulspeak.bridge.domain.UserInfo;
 import org.simulspeak.bridge.service.UserService;
@@ -27,8 +27,15 @@ public class UserController {
     @PostMapping("/register")
     @ResponseBody
     public boolean register(String identifier, String credential) {
-        return true;
-        // return userService;
+        System.out.println(identifier + " " + credential);
+        return userService.register(identifier, IdentityType.USERNAME_IDENTITY_TYPE, identifier, credential);
+    }
+
+    @PostMapping("/login")
+    @ResponseBody
+    public Long login(String identifier, String credential) {
+        System.out.println(identifier + " " + credential);
+        return userService.login(IdentityType.USERNAME_IDENTITY_TYPE, identifier, credential);
     }
 
     @RequestMapping("/getAllUser")

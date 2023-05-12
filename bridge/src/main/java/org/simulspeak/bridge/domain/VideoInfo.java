@@ -1,11 +1,10 @@
 package org.simulspeak.bridge.domain;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
-// import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,14 +30,12 @@ public class VideoInfo {
     // private String videoPath;
 
     @CreationTimestamp
-    @Column(name = "upload_time")
-    // @Column(name = "upload_time", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false, updatable = false)
-    private Date uploadTime;
+    @Column(name = "upload_time", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false, updatable = false)
+    private Timestamp uploadTime;
 
     @LastModifiedDate
-    @Column(name = "update_time")
-    // @Column(name = "update_time", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", insertable = false, updatable = false)
-    private Date updateTime;
+    @Column(name = "update_time", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", insertable = false, updatable = false)
+    private Timestamp updateTime;
 
     @ManyToOne
     @JoinColumn(name = "uploader_id", referencedColumnName = "user_id", nullable = false)
@@ -69,21 +66,21 @@ public class VideoInfo {
         this.videoName = videoName;
     }
 
-    public Date getUploadTime() {
+    public Timestamp getUploadTime() {
         return uploadTime;
     }
 
-    // public void setUploadTime(Date uploadTime) {
-    //     this.uploadTime = uploadTime;
-    // }
+    public void setUploadTime(Timestamp uploadTime) {
+        this.uploadTime = uploadTime;
+    }
 
-    public Date getUpdateTime() {
+    public Timestamp getUpdateTime() {
         return updateTime;
     }
 
-    // public void setUpdateTime(Date updateTime) {
-    //     this.updateTime = updateTime;
-    // }
+    public void setUpdateTime(Timestamp updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public UserInfo getUserInfo() {
         return userInfo;

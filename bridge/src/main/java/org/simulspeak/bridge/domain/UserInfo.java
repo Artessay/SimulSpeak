@@ -1,6 +1,7 @@
 package org.simulspeak.bridge.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -34,11 +35,15 @@ public class UserInfo implements Serializable {
 
     public UserInfo() {
         super();
+        this.userAuths = new ArrayList<>();
+        this.videoInfos = new ArrayList<>();
     }
 
     public UserInfo(String userName) {
         super();
         this.userName = userName;
+        this.userAuths = new ArrayList<>();
+        this.videoInfos = new ArrayList<>();
     }
 
     @Override
