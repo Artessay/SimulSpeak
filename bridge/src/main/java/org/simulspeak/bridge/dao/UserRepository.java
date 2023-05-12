@@ -2,13 +2,13 @@ package org.simulspeak.bridge.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import org.simulspeak.bridge.domain.User;
+import org.simulspeak.bridge.domain.UserInfo;
 
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<UserInfo, Long> {
 
-    User findByUserId(Long userId);
+    UserInfo findByUserId(Long userId);
 
-    User findByUserName(String userName);
+    UserInfo findByUserName(String userName);
 
 }
