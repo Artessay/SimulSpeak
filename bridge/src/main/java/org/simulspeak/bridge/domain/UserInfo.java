@@ -29,6 +29,9 @@ public class UserInfo implements Serializable {
     @OneToMany(mappedBy = "userInfo", cascade = CascadeType.PERSIST)
     private List<UserAuth> userAuths;
 
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.PERSIST)
+    private List<VideoInfo> videoInfos;
+
     public UserInfo() {
         super();
     }
@@ -67,5 +70,13 @@ public class UserInfo implements Serializable {
 
     public void setUserAuths(List<UserAuth> userAuths) {
         this.userAuths = userAuths;
+    }
+
+    public List<VideoInfo> getVideoInfos() {
+        return videoInfos;
+    }
+
+    public void setVideoInfos(List<VideoInfo> videoInfos) {
+        this.videoInfos = videoInfos;
     }
 }

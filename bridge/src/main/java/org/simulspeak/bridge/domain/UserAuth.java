@@ -30,7 +30,7 @@ public class UserAuth implements Serializable {
     private String credential;
     
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private UserInfo userInfo;
 
     public UserAuth() {
@@ -67,17 +67,6 @@ public class UserAuth implements Serializable {
         this.identityType = identityType;
     }
 
-    public UserInfo getUserInfo() {
-        return userInfo;
-    }
-
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
-        if (!userInfo.getUserAuths().contains(this)) {
-            userInfo.getUserAuths().add(this);
-        }
-    }
-
     public String getIdentifier() {
         return identifier;
     }
@@ -92,5 +81,16 @@ public class UserAuth implements Serializable {
 
     public void setCredential(String credential) {
         this.credential = credential;
+    }
+    
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+        if (!userInfo.getUserAuths().contains(this)) {
+            userInfo.getUserAuths().add(this);
+        }
     }
 }
