@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+// import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,14 +24,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/register")
+    @RequestMapping("/register")
     @ResponseBody
     public boolean register(String identifier, String credential) {
         System.out.println(identifier + " " + credential);
         return userService.register(identifier, IdentityType.USERNAME_IDENTITY_TYPE, identifier, credential);
     }
 
-    @PostMapping("/login")
+    @RequestMapping("/login")
     @ResponseBody
     public Long login(String identifier, String credential) {
         System.out.println(identifier + " " + credential);
