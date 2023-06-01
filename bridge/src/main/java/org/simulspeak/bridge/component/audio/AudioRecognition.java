@@ -62,5 +62,12 @@ public class AudioRecognition {
             return "";
         }
     }
+
+    public static void main(String[] args) {
+        AudioRecognition audioRecognition = new AudioRecognition();
+        String audioFilePath = "src/test/resources/audio/1.mp3";
+        String result = audioRecognition.recognize(audioFilePath);
+        System.out.println(result);
+    }
 }
 
