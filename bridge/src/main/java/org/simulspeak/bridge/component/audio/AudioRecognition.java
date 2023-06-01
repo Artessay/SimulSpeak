@@ -1,6 +1,11 @@
 package org.simulspeak.bridge.component.audio;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -49,12 +54,40 @@ public class AudioRecognition {
 
         // 发送请求并获取响应
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> responseEntity = restTemplate.exchange(requestUrl, HttpMethod.POST, requestEntity, String.class);
+        // ResponseEntity<InputStream> responseEntity = restTemplate.exchange(requestUrl, HttpMethod.POST, requestEntity, InputStream.class);
+        ResponseEntity<byte[]> responseEntity = restTemplate.exchange(requestUrl, HttpMethod.POST, requestEntity, byte[].class);
 
         // 处理响应
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            String response = responseEntity.getBody();
-            logger.info("recognize result: " + response);
+            // try {
+            //     InputStream responseStream = responseEntity.getBody();
+            //     BufferedReader reader = new BufferedReader(new InputStreamReader(responseStream, StandardCharsets.UTF_8));
+
+            //     String line;
+            //     while ((line = reader.readLine()) != null) {
+            //         // 处理每一行文本结果
+            //         System.out.println("recognize result: " + line);
+            //     }
+            // } catch (IOException e) {
+            //     System.out.println("can not get response from server");
+            // }
+            try {
+                byte[] responseBody = responseEntity.getBody();
+                String responseText = new String(responseBody, StandardCharsets.UTF_8);
+
+                BufferedReader reader = new BufferedReader(new StringReader(responseText));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // 处理每一行文本结果
+                    logger.info("recognize result: " + line);
+                }
+            } catch (IOException e) {
+                logger.error("can not get response from server");
+            }
+
+
+            String response = "";
             return response;
         } else {
             HttpStatusCode statusCode = responseEntity.getStatusCode();
