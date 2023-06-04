@@ -20,11 +20,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class StorageImplement implements VideoService {
     
-    private Socket socket;
+    private Socket socket = null;
 
-    private DataInputStream fromServer;
+    private DataInputStream fromServer = null;
 
-    private DataOutputStream toServer;
+    private DataOutputStream toServer = null;
 
     @Autowired
     private VideoRepository videoRepository;
@@ -60,7 +60,7 @@ public class StorageImplement implements VideoService {
         // create connection
         try {
             // Create a socket to connect to the server
-            socket = new Socket("192.168.137.78", 9999);
+            socket = new Socket("192.168.137.87", 9999);
 
             // create a output stream to send data to the server
             toServer = new DataOutputStream(socket.getOutputStream());
@@ -71,6 +71,60 @@ public class StorageImplement implements VideoService {
             ex.printStackTrace();
             logger.error("[client] create socket failed");
         }
+
+        logger.info("[client] create socket success");
+    }
+
+    @Override
+    public Long upload(String videoName, Long userId, NetAddress address) {
+        System.out.println("[storage] upload");
+        System.out.println(videoName + " " + userId);
+        if (videoName == null || userId == BridgeConfig.ERROR_USER_ID) {
+            logger.debug("upload video parameter is null");
+            return -1L;
+        }
+        System.out.println("[storage] upload");
+        UserInfo userInfo = userRepository.findByUserId(userId);
+        if (userInfo == null) {
+            logger.error("user does not exist");
+            return -1L;
+        }
+        System.out.println("[storage] upload");
+        VideoInfo videoInfo;
+        videoInfo = videoRepository.findByVideoNameAndUserInfo(videoName, userInfo);
+        if (videoInfo != null) {
+            logger.debug("video {} has already existed", videoName);
+            return -1L;
+        }
+        System.out.println("[storage] upload connect");
+        if (socket == null || toServer == null || fromServer == null) {
+            connectStorageServer();
+        }
+        System.out.println("[storage] upload");
+        try {
+            toServer.writeUTF("upload");
+
+            String ip = fromServer.readUTF();
+            // String port = fromServer.readUTF();
+            String port = "7777";
+
+            logger.debug(ip + " : " + port);
+            // logger.debug(ip);
+
+            address.setIp(ip);
+            address.setPort(port);
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error("[client] upload video failed");
+            return -1L;
+        }
+
+        videoInfo = new VideoInfo(videoName);
+
+        videoInfo.setUserInfo(userInfo);
+        videoRepository.saveAndFlush(videoInfo);
+
+        return videoInfo.getVideoId();
     }
 
     @Override
@@ -101,9 +155,11 @@ public class StorageImplement implements VideoService {
             toServer.writeUTF("upload");
 
             String ip = fromServer.readUTF();
-            String port = fromServer.readUTF();
+            // String port = fromServer.readUTF();
+            String port = "7777";
 
             logger.debug(ip + " : " + port);
+            // logger.debug(ip);
 
             address.setIp(ip);
             address.setPort(port);

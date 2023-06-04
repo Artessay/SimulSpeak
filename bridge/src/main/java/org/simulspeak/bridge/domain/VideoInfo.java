@@ -26,8 +26,8 @@ public class VideoInfo {
     @Column(name = "video_name")
     private String videoName;
 
-    // @Column(name = "video_path")
-    // private String videoPath;
+    @Column(name = "video_path")
+    private String videoPath;
 
     @CreationTimestamp
     @Column(name = "upload_time", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false, updatable = false)

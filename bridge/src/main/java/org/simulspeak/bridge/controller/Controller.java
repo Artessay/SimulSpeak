@@ -11,15 +11,51 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/video")
 public class Controller {
 
     @Autowired
     private VideoService videoService;
 
+    @GetMapping("/recommend")
+    public String recommend() {
+        // Map<String, Object> map;
+
+        // NetAddress netAddress = new NetAddress();
+        // if (videoService.recommend(videoName, userId, netAddress)) {
+        //     map = netAddress.toJson();
+        //     map.put("status", "success");
+        // } else {
+        //     map=new HashMap<>();
+        //     map.put("status", "fail");
+        // }
+
+        // return map;
+        System.out.println("recommend");
+        return "success\r\nfailed\r\nurl\r\n";
+    }
+
+    @GetMapping("/upload")
+    public String upload(String videoName, Long userId) {
+        String result = "";
+        System.out.println("upload");
+        NetAddress netAddress = new NetAddress();
+        Long videoID = videoService.upload(videoName, userId, netAddress);
+
+        if (videoID >= 0) {
+            result = netAddress.toString();
+            result += "\r\n" + userId;
+            result += "\r\n" + videoID;
+        }
+
+        System.out.println(result);
+
+        return result;
+    }
+
     @GetMapping("/uploadVideo")
-    public Map<String, Object> uploadVideo(String videoName, Long userId) {
-        Map<String, Object> map;
+    public Map<String, String> uploadVideo(String videoName, Long userId) {
+        Map<String, String> map;
 
         NetAddress netAddress = new NetAddress();
         if (videoService.uploadVideo(videoName, userId, netAddress)) {
@@ -34,8 +70,8 @@ public class Controller {
     }
 
     @GetMapping("/requestVideo")
-    public Map<String, Object> requestVideo(String videoName, Long userId) {
-        Map<String, Object> map;
+    public Map<String, String> requestVideo(String videoName, Long userId) {
+        Map<String, String> map;
 
         NetAddress netAddress = new NetAddress();
         if (videoService.requestVideo(videoName, userId, netAddress)) {

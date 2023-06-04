@@ -6,11 +6,15 @@ public class NetAddress {
     private String ip;
     private String port;
 
-    public Map<String, Object> toJson() {
-        Map<String, Object> map = new java.util.HashMap<>();
+    public Map<String, String> toJson() {
+        Map<String, String> map = new java.util.HashMap<>();
         map.put("ip", ip);
         map.put("port", port);
         return map;
+    }
+
+    public String toString() {
+        return  ip + "\r\n" + port;
     }
     
     public String getIp() {
