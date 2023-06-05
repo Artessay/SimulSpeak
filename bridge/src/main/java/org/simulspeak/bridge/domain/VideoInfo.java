@@ -35,8 +35,8 @@ public class VideoInfo {
     @Column(name = "audio_path")
     private String audioPath;
 
-    @Column(name = "comment_path")
-    private String commentPath;
+    // @Column(name = "comment_path")
+    // private String commentPath;
 
     @CreationTimestamp
     @Column(name = "upload_time", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false, updatable = false)
@@ -99,13 +99,13 @@ public class VideoInfo {
         this.audioPath = audio_path;
     }
 
-    public String getCommentPath() {
-        return commentPath;
-    }
+    // public String getCommentPath() {
+    //     return commentPath;
+    // }
 
-    public void setCommentPath(String comment_path) {
-        this.commentPath = comment_path;
-    }
+    // public void setCommentPath(String comment_path) {
+    //     this.commentPath = comment_path;
+    // }
 
     public Timestamp getUploadTime() {
         return uploadTime;
