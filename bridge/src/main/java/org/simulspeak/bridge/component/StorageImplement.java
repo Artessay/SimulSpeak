@@ -76,9 +76,29 @@ public class StorageImplement implements VideoService {
         logger.info("[client] create socket success");
     }
 
+    private String apply(Long userId, Long videoId, Long applyType) {
+        if (socket == null || toServer == null || fromServer == null) {
+            connectStorageServer();
+        }
+
+        String url = null;
+        try {
+            toServer.writeUTF("apply");
+            toServer.writeLong(userId);
+            toServer.writeLong(videoId);
+            toServer.writeLong(applyType);
+
+            url = fromServer.readUTF();
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error("[client] upload video failed");
+        }
+
+        return url;
+    }
+
     @Override
     public Long upload(String videoName, Long userId, NetAddress address) {
-        System.out.println("[storage] upload");
         System.out.println(videoName + " " + userId);
         if (videoName == null || userId == BridgeConfig.ERROR_USER_ID) {
             logger.debug("upload video parameter is null");
@@ -123,6 +143,12 @@ public class StorageImplement implements VideoService {
         videoInfo = new VideoInfo(videoName);
 
         videoInfo.setUserInfo(userInfo);
+
+        Long videoId = videoInfo.getVideoId();
+        videoInfo.setVideoPath(apply(userId, videoId, BridgeConfig.APPLY_VIDEO_ENUM));
+        videoInfo.setFigurePath(apply(userId, videoId, BridgeConfig.APPLY_IMAGE_ENUM));
+        videoInfo.setCommentPath(apply(userId, videoId, BridgeConfig.APPLY_COMMENT_ENUM));
+        
         videoRepository.saveAndFlush(videoInfo);
 
         return videoInfo.getVideoId();
@@ -185,10 +211,13 @@ public class StorageImplement implements VideoService {
     @Override
     public String recommend() {
         List<VideoInfo> videoInfos = recommendList();
+        System.out.println("[storage] recommend " + videoInfos.size());
+
         String result = "";
         for (VideoInfo videoInfo : videoInfos) {
             result += videoInfo.getVideoPath() + "\r\n";
         }
+        System.out.println(result);
         return result;
     }
 
