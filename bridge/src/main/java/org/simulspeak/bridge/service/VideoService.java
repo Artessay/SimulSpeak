@@ -11,6 +11,8 @@ public interface VideoService {
     
     public boolean uploadVideo(String videoName, Long userId, NetAddress address);
 
+    public String request(Long videoId);
+
     public boolean requestVideo(String videoName, Long userId, NetAddress address);
 
     public String recommend();

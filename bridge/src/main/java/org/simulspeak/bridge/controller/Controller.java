@@ -58,6 +58,12 @@ public class Controller {
         return map;
     }
 
+    @GetMapping("request")
+    public String request(Long videoId) {
+        System.out.println("request");
+        return videoService.request(videoId);
+    }
+
     @GetMapping("/requestVideo")
     public Map<String, String> requestVideo(String videoName, Long userId) {
         Map<String, String> map;

@@ -87,22 +87,25 @@ public class StorageImplement implements VideoService {
         }
     }
 
-    public String apply(Long userId, Long videoId, Long applyType) {
-        if (socket == null || toServer == null || fromServer == null) {
-            connectStorageServer();
-        }
+    public String apply(Long userId, Long videoId, int applyType) {
+        // if (socket == null || toServer == null || fromServer == null) {
+        //     connectStorageServer();
+        // }
+        connectStorageServer();
 
         String url = null;
         try {
             toServer.writeUTF("apply");
             toServer.writeLong(userId);
             toServer.writeLong(videoId);
-            toServer.writeLong(applyType);
+            toServer.writeInt(applyType);
 
             url = fromServer.readUTF();
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("[client] upload video failed");
+        } finally {
+            disconnectStorageServer();
         }
 
         return url;
@@ -159,12 +162,6 @@ public class StorageImplement implements VideoService {
 
         videoInfo.setUserInfo(userInfo);
 
-        // Long videoId = videoInfo.getVideoId();
-        // videoInfo.setVideoPath(apply(userId, videoId, BridgeConfig.APPLY_VIDEO_ENUM));
-        // videoInfo.setFigurePath(apply(userId, videoId, BridgeConfig.APPLY_IMAGE_ENUM));
-        // videoInfo.setCommentPath(apply(userId, videoId, BridgeConfig.APPLY_COMMENT_ENUM));
-        // videoInfo.setAudioPath(apply(userId, videoId, BridgeConfig.APPLY_AUDIO_ENUM));
-
         videoRepository.saveAndFlush(videoInfo);
 
         logger.info("[storage] upload success");
@@ -177,6 +174,31 @@ public class StorageImplement implements VideoService {
         Long videoId = upload(videoName, userId, address);
 
         return videoId != BridgeConfig.ERROR_VIDEO_ID;
+    }
+
+    @Override
+    public String request(Long videoId) {
+        if (videoId == BridgeConfig.ERROR_VIDEO_ID) {
+            logger.error("request video parameter error");
+            return null;
+        }
+
+        VideoInfo videoInfo;
+        videoInfo = videoRepository.findByVideoId(videoId);
+        if (videoInfo == null) {
+            logger.info("video id {} does not exist", videoId);
+            return null;
+        }
+
+        Long userId = videoInfo.getUserInfo().getUserId();
+        if (videoInfo.getVideoPath() == null) {
+            videoInfo.setVideoPath(apply(userId, videoId, BridgeConfig.APPLY_VIDEO_ENUM));
+            videoRepository.save(videoInfo);
+        }
+
+        System.out.println(videoInfo.getVideoPath());
+
+        return videoInfo.getVideoPath();
     }
     
     @Override
@@ -201,9 +223,10 @@ public class StorageImplement implements VideoService {
 
         Long videoId = videoInfo.getVideoId();
 
-        if (socket == null || toServer == null || fromServer == null) {
-            connectStorageServer();
-        }
+        // if (socket == null || toServer == null || fromServer == null) {
+        //     connectStorageServer();
+        // }
+        connectStorageServer();
 
         try {
             toServer.writeUTF("apply");
@@ -233,7 +256,32 @@ public class StorageImplement implements VideoService {
 
         String result = "";
         for (VideoInfo videoInfo : videoInfos) {
-            result += videoInfo.getVideoPath() + "\r\n";
+            Long userId = videoInfo.getUserInfo().getUserId();
+            Long videoId = videoInfo.getVideoId();
+
+            // if (videoInfo.getVideoPath() == null) {
+            //     videoInfo.setVideoPath(apply(userId, videoId, BridgeConfig.APPLY_VIDEO_ENUM));
+            //     videoRepository.save(videoInfo);
+            // }
+            if (videoInfo.getFigurePath() == null) {
+                videoInfo.setFigurePath(apply(userId, videoId, BridgeConfig.APPLY_IMAGE_ENUM));
+                videoRepository.save(videoInfo);
+            }
+            // if (videoInfo.getCommentPath() == null) {
+            //     videoInfo.setCommentPath(apply(userId, videoId, BridgeConfig.APPLY_COMMENT_ENUM));
+            //     videoRepository.save(videoInfo);
+            // }
+            // if (videoInfo.getAudioPath() == null) {
+            //     videoInfo.setAudioPath(apply(userId, videoId, BridgeConfig.APPLY_AUDIO_ENUM));
+            //     videoRepository.save(videoInfo);
+            // }
+
+            String line = videoInfo.getFigurePath() + "\r\n" +
+                videoInfo.getVideoName() + "\r\n" +
+                videoInfo.getUploadTime().toString() + "\r\n" +
+                userId + "\r\n" +
+                videoId + "\r\n";
+            result += line;
         }
         // System.out.println(result);
         return result;
