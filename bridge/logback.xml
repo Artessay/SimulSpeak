@@ -1,5 +1,9 @@
 <configuration>
   <!-- 其他日志配置 -->
+  <root level="DEBUG">
+    <appender-ref ref="console"/>
+    <appender-ref ref="timeFileOutput"/>
+  </root>
 
   <!-- 禁用 RestTemplate 的日志输出 -->
   <logger name="org.springframework.web.client.RestTemplate" level="ERROR" />

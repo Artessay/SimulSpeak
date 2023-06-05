@@ -32,8 +32,8 @@ public class VideoInfo {
     @Column(name = "figure_path")
     private String figurePath;
 
-    // @Column(name = "audio_path")
-    // private String audioPath;
+    @Column(name = "audio_path")
+    private String audioPath;
 
     @Column(name = "comment_path")
     private String commentPath;
@@ -91,13 +91,13 @@ public class VideoInfo {
         this.figurePath = figure_path;
     }
 
-    // public String getAudioPath() {
-    //     return audioPath;
-    // }
+    public String getAudioPath() {
+        return audioPath;
+    }
 
-    // public void setAudioPath(String audio_path) {
-    //     this.audioPath = audio_path;
-    // }
+    public void setAudioPath(String audio_path) {
+        this.audioPath = audio_path;
+    }
 
     public String getCommentPath() {
         return commentPath;
