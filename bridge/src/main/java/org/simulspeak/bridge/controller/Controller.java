@@ -19,20 +19,9 @@ public class Controller {
 
     @GetMapping("/recommend")
     public String recommend() {
-        // Map<String, Object> map;
-
-        // NetAddress netAddress = new NetAddress();
-        // if (videoService.recommend(videoName, userId, netAddress)) {
-        //     map = netAddress.toJson();
-        //     map.put("status", "success");
-        // } else {
-        //     map=new HashMap<>();
-        //     map.put("status", "fail");
-        // }
-
-        // return map;
         System.out.println("recommend");
-        return "success\r\nfailed\r\nurl\r\n";
+
+        return videoService.recommend();
     }
 
     @GetMapping("/upload")

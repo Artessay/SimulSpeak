@@ -66,6 +66,14 @@ public class VideoInfo {
         this.videoName = videoName;
     }
 
+    public String getVideoPath() {
+        return videoPath;
+    }
+
+    public void setVideoPath(String video_path) {
+        this.videoPath = video_path;
+    }
+
     public Timestamp getUploadTime() {
         return uploadTime;
     }

@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 
 import org.simulspeak.bridge.configuration.BridgeConfig;
 import org.simulspeak.bridge.configuration.NetAddress;
@@ -81,20 +82,20 @@ public class StorageImplement implements VideoService {
         System.out.println(videoName + " " + userId);
         if (videoName == null || userId == BridgeConfig.ERROR_USER_ID) {
             logger.debug("upload video parameter is null");
-            return -1L;
+            return BridgeConfig.ERROR_VIDEO_ID;
         }
         System.out.println("[storage] upload");
         UserInfo userInfo = userRepository.findByUserId(userId);
         if (userInfo == null) {
             logger.error("user does not exist");
-            return -1L;
+            return BridgeConfig.ERROR_VIDEO_ID;
         }
         System.out.println("[storage] upload");
         VideoInfo videoInfo;
         videoInfo = videoRepository.findByVideoNameAndUserInfo(videoName, userInfo);
         if (videoInfo != null) {
             logger.debug("video {} has already existed", videoName);
-            return -1L;
+            return BridgeConfig.ERROR_VIDEO_ID;
         }
         System.out.println("[storage] upload connect");
         if (socket == null || toServer == null || fromServer == null) {
@@ -116,7 +117,7 @@ public class StorageImplement implements VideoService {
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("[client] upload video failed");
-            return -1L;
+            return BridgeConfig.ERROR_VIDEO_ID;
         }
 
         videoInfo = new VideoInfo(videoName);
@@ -129,52 +130,9 @@ public class StorageImplement implements VideoService {
 
     @Override
     public boolean uploadVideo(String videoName, Long userId, NetAddress address) {
-        if (videoName == null || userId == BridgeConfig.ERROR_USER_ID) {
-            logger.debug("upload video parameter is null");
-            return false;
-        }
-        
-        UserInfo userInfo = userRepository.findByUserId(userId);
-        if (userInfo == null) {
-            logger.error("user does not exist");
-            return false;
-        }
+        Long videoId = upload(videoName, userId, address);
 
-        VideoInfo videoInfo;
-        videoInfo = videoRepository.findByVideoNameAndUserInfo(videoName, userInfo);
-        if (videoInfo != null) {
-            logger.debug("video {} has already existed", videoName);
-            return false;
-        }
-
-        if (socket == null || toServer == null || fromServer == null) {
-            connectStorageServer();
-        }
-        
-        try {
-            toServer.writeUTF("upload");
-
-            String ip = fromServer.readUTF();
-            // String port = fromServer.readUTF();
-            String port = "7777";
-
-            logger.debug(ip + " : " + port);
-            // logger.debug(ip);
-
-            address.setIp(ip);
-            address.setPort(port);
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.error("[client] upload video failed");
-            return false;
-        }
-
-        videoInfo = new VideoInfo(videoName);
-
-        videoInfo.setUserInfo(userInfo);
-        videoRepository.saveAndFlush(videoInfo);
-
-        return true;
+        return videoId != BridgeConfig.ERROR_VIDEO_ID;
     }
     
     @Override
@@ -222,6 +180,21 @@ public class StorageImplement implements VideoService {
         }
 
         return true;
+    }
+
+    @Override
+    public String recommend() {
+        List<VideoInfo> videoInfos = recommendList();
+        String result = "";
+        for (VideoInfo videoInfo : videoInfos) {
+            result += videoInfo.getVideoPath() + "\r\n";
+        }
+        return result;
+    }
+
+    @Override
+    public List<VideoInfo> recommendList() {
+        return videoRepository.findByOrderByUploadTimeDesc();
     }
 
 }
