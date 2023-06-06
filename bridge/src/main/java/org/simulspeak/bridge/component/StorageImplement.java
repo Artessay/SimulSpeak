@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
 
+import org.simulspeak.bridge.component.audio.ExtractVideoTime;
 import org.simulspeak.bridge.configuration.BridgeConfig;
 import org.simulspeak.bridge.configuration.NetAddress;
 import org.simulspeak.bridge.dao.UserRepository;
@@ -176,8 +177,7 @@ public class StorageImplement implements VideoService {
         return videoId != BridgeConfig.ERROR_VIDEO_ID;
     }
 
-    @Override
-    public String request(Long videoId) {
+    private VideoInfo requestVideoInfo(Long videoId) {
         if (videoId == BridgeConfig.ERROR_VIDEO_ID) {
             logger.error("request video parameter error");
             return null;
@@ -198,7 +198,28 @@ public class StorageImplement implements VideoService {
 
         System.out.println(videoInfo.getVideoPath());
 
-        return videoInfo.getVideoPath();
+        return videoInfo;
+    }
+
+    @Override
+    public String request(Long videoId) {
+        VideoInfo videoInfo = requestVideoInfo(videoId);
+        if (videoInfo == null) {
+            logger.error("request video info failed");
+            return null;
+        }
+
+        if (videoInfo.getAudioPath() == null) {
+            videoInfo.setAudioPath(apply(videoInfo.getUserInfo().getUserId(), videoId, BridgeConfig.APPLY_AUDIO_ENUM));
+            videoRepository.save(videoInfo);
+        }
+
+        String audioPath = videoInfo.getAudioPath();
+        int videoSeconds = ExtractVideoTime.extractVideoSeconds(audioPath);
+
+        String result = videoInfo.getVideoPath() + "\r\n" + videoSeconds;
+
+        return result;
     }
     
     @Override

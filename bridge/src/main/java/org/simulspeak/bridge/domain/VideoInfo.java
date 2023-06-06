@@ -1,10 +1,13 @@
 package org.simulspeak.bridge.domain;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -50,13 +54,19 @@ public class VideoInfo {
     @JoinColumn(name = "uploader_id", referencedColumnName = "user_id", nullable = false)
     private UserInfo userInfo;
 
+    @OneToMany(mappedBy = "videoInfo", cascade = CascadeType.PERSIST)
+    private List<VideoComment> videoComments;
+
+
     public VideoInfo() {
         super();
+        this.videoComments = new ArrayList<>();
     }
 
     public VideoInfo(String videoName) {
         super();
         this.videoName = videoName;
+        this.videoComments = new ArrayList<>();
     }
 
     public Long getVideoId() {
@@ -133,4 +143,13 @@ public class VideoInfo {
             userInfo.getVideoInfos().add(this);
         }
     }
+
+    public List<VideoComment> getVideoComments() {
+        return videoComments;
+    }
+
+    public void setVideoComments(List<VideoComment> videoComments) {
+        this.videoComments = videoComments;
+    }
+    
 }
