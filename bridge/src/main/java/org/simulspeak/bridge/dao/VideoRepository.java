@@ -19,4 +19,6 @@ public interface VideoRepository extends JpaRepository<VideoInfo, Long> {
 
     List<VideoInfo> findByVideoNameLikeOrderByUploadTimeDesc(String videoName);
 
+    List<VideoInfo> findByUserInfoUserIdOrderByUploadTimeDesc(Long userId);
+
 }

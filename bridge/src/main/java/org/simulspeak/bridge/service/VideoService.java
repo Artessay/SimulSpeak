@@ -23,4 +23,8 @@ public interface VideoService {
 
     public List<VideoInfo> searchList(String videoName);
 
+    public String searchByUser(Long userId);
+
+    public List<VideoInfo> searchListByUser(Long userId);
+
 }

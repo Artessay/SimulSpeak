@@ -35,6 +35,13 @@ public class Controller {
         return videoService.search(videoName);
     }
 
+    @GetMapping("/searchByUser")
+    public String searchByUser(Long userId) {
+        System.out.println("searchByUser");
+
+        return videoService.searchByUser(userId);
+    }
+
     @GetMapping("/upload")
     public String upload(String videoName, Long userId) {
         String result = "";

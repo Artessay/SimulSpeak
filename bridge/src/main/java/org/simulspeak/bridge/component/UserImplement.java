@@ -23,11 +23,11 @@ public class UserImplement implements UserService {
     private AuthenticationRepository authenticationRepository;
     
     @Override
-    public boolean register(String userName, String identityType, String identifier, String credential) {
+    public Long register(String userName, String identityType, String identifier, String credential) {
         UserInfo user = userRepository.findByUserName(userName);
         if (user != null) {
             logger.debug("username {} has already existed", userName);
-            return false;
+            return BridgeConfig.ERROR_USER_ID;
         }
 
         user = new UserInfo(userName);
@@ -37,7 +37,7 @@ public class UserImplement implements UserService {
         userRepository.saveAndFlush(user);
         authenticationRepository.saveAndFlush(userAuth);
 
-        return true;
+        return user.getUserId();
     }
 
     @Override

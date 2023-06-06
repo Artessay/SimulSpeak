@@ -315,6 +315,7 @@ public class StorageImplement implements VideoService {
 
     @Override
     public String search(String videoName) {
+        System.out.println("[search] " + videoName);
         List<VideoInfo> videoInfos = searchList(videoName);
 
         StringBuffer result = new StringBuffer();
@@ -329,6 +330,25 @@ public class StorageImplement implements VideoService {
     @Override
     public List<VideoInfo> searchList(String videoName) {
         return videoRepository.findByVideoNameLikeOrderByUploadTimeDesc("%" + videoName + "%");
+    }
+
+    @Override
+    public String searchByUser(Long userId) {
+        System.out.println("[search] " + userId);
+        List<VideoInfo> videoInfos = searchListByUser(userId);
+
+        StringBuffer result = new StringBuffer();
+        for (VideoInfo videoInfo : videoInfos) {
+            String line = resultFormat(videoInfo);
+            result.append(line);
+        }
+        
+        return result.toString();
+    }
+
+    @Override
+    public List<VideoInfo> searchListByUser(Long userId) {
+        return videoRepository.findByUserInfoUserIdOrderByUploadTimeDesc(userId);
     }
 
 }

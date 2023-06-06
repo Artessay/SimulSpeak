@@ -26,7 +26,7 @@ public class UserController {
 
     @RequestMapping("/register")
     @ResponseBody
-    public boolean register(String identifier, String credential) {
+    public Long register(String identifier, String credential) {
         System.out.println(identifier + " " + credential);
         return userService.register(identifier, IdentityType.USERNAME_IDENTITY_TYPE, identifier, credential);
     }
