@@ -7,15 +7,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ExtractVideoTime {
-    public static void main(String[] args) {
+    // public static void main(String[] args) {
         
-        String timeLength = extractVideoTime("E:\\CP\\Arboretum\\audio.mp3");
-        if(timeLength.length()>0){//字符串截取
-            timeLength =timeLength.substring(0,timeLength.indexOf("."));
-        }
-        System.out.println("视频时长:"+timeLength);
+    //     String timeLength = extractVideoTime("E:\\CP\\Arboretum\\audio.mp3");
+    //     if(timeLength.length()>0){//字符串截取
+    //         timeLength =timeLength.substring(0,timeLength.indexOf("."));
+    //     }
+    //     System.out.println("视频时长:"+timeLength);
        
-    }
+    // }
 
     public static int extractVideoSeconds(String video_path) {
         String times = extractVideoTime(video_path);

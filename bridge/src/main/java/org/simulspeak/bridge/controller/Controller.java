@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.simulspeak.bridge.configuration.NetAddress;
+import org.simulspeak.bridge.service.CommentService;
 import org.simulspeak.bridge.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,9 @@ public class Controller {
 
     @Autowired
     private VideoService videoService;
+
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping("/recommend")
     public String recommend() {
@@ -78,6 +82,24 @@ public class Controller {
         }
 
         return map;
+    }
+
+    @GetMapping("/pullComment")
+    public String pullComment(Long videoId) {
+        System.out.println("comment: pull");
+        
+        return commentService.pull(videoId);
+    }
+
+    @GetMapping("/pushComment")
+    public String pushComment(Long videoId, Long userId, String comment) {
+        System.out.println("comment: push");
+        
+        if (commentService.push(videoId, userId, comment)) {
+            return "success";
+        } else {
+            return "failed";
+        }
     }
  
     @RequestMapping("/test")
