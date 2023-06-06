@@ -39,6 +39,11 @@ public class CommentImplement implements CommentService {
         for (VideoComment comment: comments) {
             result.append(comment.getComment());
             result.append("\r\n");
+
+            UserInfo userInfo = comment.getUserInfo();
+            String userName = userInfo.getUserName();
+            result.append(userName);
+            result.append("\r\n");
         }
 
         return result.toString();

@@ -19,4 +19,8 @@ public interface VideoService {
     
     public List<VideoInfo> recommendList();
 
+    public String search(String videoName);
+
+    public List<VideoInfo> searchList(String videoName);
+
 }

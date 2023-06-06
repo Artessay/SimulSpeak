@@ -28,6 +28,13 @@ public class Controller {
         return videoService.recommend();
     }
 
+    @GetMapping("/search")
+    public String search(String videoName) {
+        System.out.println("search");
+
+        return videoService.search(videoName);
+    }
+
     @GetMapping("/upload")
     public String upload(String videoName, Long userId) {
         String result = "";
@@ -87,7 +94,7 @@ public class Controller {
     @GetMapping("/pullComment")
     public String pullComment(Long videoId) {
         System.out.println("comment: pull");
-        
+
         return commentService.pull(videoId);
     }
 

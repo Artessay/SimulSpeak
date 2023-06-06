@@ -270,47 +270,65 @@ public class StorageImplement implements VideoService {
         return true;
     }
 
+    private String resultFormat(VideoInfo videoInfo) {
+        Long userId = videoInfo.getUserInfo().getUserId();
+        Long videoId = videoInfo.getVideoId();
+
+        if (videoInfo.getFigurePath() == null) {
+            videoInfo.setFigurePath(apply(userId, videoId, BridgeConfig.APPLY_IMAGE_ENUM));
+            videoRepository.save(videoInfo);
+        }
+
+        StringBuffer line = new StringBuffer();
+        line.append(videoInfo.getFigurePath())
+            .append("\r\n")
+            .append(videoInfo.getVideoName())
+            .append("\r\n")
+            .append(videoInfo.getUploadTime().toString())
+            .append("\r\n")
+            .append(Long.toString(userId))
+            .append("\r\n")
+            .append(Long.toString(videoId))
+            .append("\r\n");
+        
+        return line.toString();
+    }
+
     @Override
     public String recommend() {
         List<VideoInfo> videoInfos = recommendList();
         System.out.println("[storage] recommend " + videoInfos.size());
 
-        String result = "";
+        StringBuffer result = new StringBuffer();
         for (VideoInfo videoInfo : videoInfos) {
-            Long userId = videoInfo.getUserInfo().getUserId();
-            Long videoId = videoInfo.getVideoId();
-
-            // if (videoInfo.getVideoPath() == null) {
-            //     videoInfo.setVideoPath(apply(userId, videoId, BridgeConfig.APPLY_VIDEO_ENUM));
-            //     videoRepository.save(videoInfo);
-            // }
-            if (videoInfo.getFigurePath() == null) {
-                videoInfo.setFigurePath(apply(userId, videoId, BridgeConfig.APPLY_IMAGE_ENUM));
-                videoRepository.save(videoInfo);
-            }
-            // if (videoInfo.getCommentPath() == null) {
-            //     videoInfo.setCommentPath(apply(userId, videoId, BridgeConfig.APPLY_COMMENT_ENUM));
-            //     videoRepository.save(videoInfo);
-            // }
-            // if (videoInfo.getAudioPath() == null) {
-            //     videoInfo.setAudioPath(apply(userId, videoId, BridgeConfig.APPLY_AUDIO_ENUM));
-            //     videoRepository.save(videoInfo);
-            // }
-
-            String line = videoInfo.getFigurePath() + "\r\n" +
-                videoInfo.getVideoName() + "\r\n" +
-                videoInfo.getUploadTime().toString() + "\r\n" +
-                userId + "\r\n" +
-                videoId + "\r\n";
-            result += line;
+            String line = resultFormat(videoInfo);
+            result.append(line);
         }
-        // System.out.println(result);
-        return result;
+        
+        return result.toString();
     }
 
     @Override
     public List<VideoInfo> recommendList() {
         return videoRepository.findByOrderByUploadTimeDesc();
+    }
+
+    @Override
+    public String search(String videoName) {
+        List<VideoInfo> videoInfos = searchList(videoName);
+
+        StringBuffer result = new StringBuffer();
+        for (VideoInfo videoInfo : videoInfos) {
+            String line = resultFormat(videoInfo);
+            result.append(line);
+        }
+        
+        return result.toString();
+    }
+
+    @Override
+    public List<VideoInfo> searchList(String videoName) {
+        return videoRepository.findByVideoNameLikeOrderByUploadTimeDesc("%" + videoName + "%");
     }
 
 }
