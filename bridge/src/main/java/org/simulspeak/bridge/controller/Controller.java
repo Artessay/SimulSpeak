@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.simulspeak.bridge.configuration.NetAddress;
 import org.simulspeak.bridge.service.CommentService;
+import org.simulspeak.bridge.service.SubtitleService;
 import org.simulspeak.bridge.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,9 @@ public class Controller {
 
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private SubtitleService subtitleService;
 
     @GetMapping("/recommend")
     public String recommend() {
@@ -114,6 +118,14 @@ public class Controller {
         } else {
             return "failed";
         }
+    }
+
+    @GetMapping("/SubTitle")
+    public String Subtitle(Long videoId) {
+        System.out.println("Subtitle");
+
+        return "";
+        // return subtitleService.subtitle(videoId);
     }
  
     @RequestMapping("/test")

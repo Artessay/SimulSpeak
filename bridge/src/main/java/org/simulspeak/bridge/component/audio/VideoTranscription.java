@@ -1,32 +1,43 @@
 package org.simulspeak.bridge.component.audio;
 
-import java.io.BufferedReader;
+// import java.io.BufferedReader;
+// import java.io.BufferedWriter;
+// import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+// import java.io.InputStream;
+// import java.io.InputStreamReader;
 
 public class VideoTranscription {
     public static void main(String[] args) {
-        String videoFilePath = "path/to/video.mp4";
-        String audioFilePath = "path/to/audio.wav";
-        String apiKey = "your_openai_api_key";
-
-        // Step 1: Extract audio from video using FFmpeg
-        extractAudioFromVideo(videoFilePath, audioFilePath);
-
-        // Step 2: Perform speech recognition using OpenAI Whisper API
-        String transcription = performSpeechRecognition(audioFilePath, apiKey);
-
-        // Step 3: Generate subtitle file and bind it to the video
-        String subtitleFilePath = "path/to/subtitles.srt";
-        generateSubtitleFile(subtitleFilePath, transcription);
-
-        bindSubtitlesToVideo(videoFilePath, subtitleFilePath, "path/to/output.mp4");
+        String videoFilePath = "E:/CP/Arboretum/audio/video.mp4";
+        String outputFilePath = "E:/CP/Arboretum/audio/output.mp4";
+        videoTranscription(videoFilePath, outputFilePath);
     }
 
-    private static void extractAudioFromVideo(String videoFilePath, String audioFilePath) {
+    public static void videoTranscription(String videoFilePath, String outputFilePath) {
+        // Step 1: Perform speech recognition using OpenAI Whisper
+        performSpeechRecognition(videoFilePath);
+
+        // Step 2: Generate subtitle file and bind it to the video
+        String subtitleFilePath = videoFilePath + ".srt";
+        bindSubtitlesToVideo(videoFilePath, subtitleFilePath, outputFilePath);
+    }
+
+    // private static void extractAudioFromVideo(String videoFilePath, String audioFilePath) {
+    //     try {
+    //         String command = String.format("ffmpeg -i %s -vn -acodec pcm_s16le -ar 44100 -ac 2 %s", videoFilePath, audioFilePath);
+    //         Process process = Runtime.getRuntime().exec(command);
+    //         process.waitFor();
+    //     } catch (IOException | InterruptedException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+
+    private static void performSpeechRecognition(String audioFilePath) {
         try {
-            String command = String.format("ffmpeg -i %s -vn -acodec pcm_s16le -ar 44100 -ac 2 %s", videoFilePath, audioFilePath);
+            String command = String.format("whisper %s", audioFilePath);
+            System.out.println(command);
+            
             Process process = Runtime.getRuntime().exec(command);
             process.waitFor();
         } catch (IOException | InterruptedException e) {
@@ -34,44 +45,30 @@ public class VideoTranscription {
         }
     }
 
-    private static String performSpeechRecognition(String audioFilePath, String apiKey) {
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder(
-                    "curl",
-                    "-X",
-                    "POST",
-                    "-H",
-                    "Authorization: Bearer " + apiKey,
-                    "-H",
-                    "Content-Type: application/json",
-                    "-d",
-                    "{\"audio\": {\"url\": \"" + audioFilePath + "\"}, \"config\": {\"language_code\": \"en-US\"}}",
-                    "https://api.openai.com/v1/whisper/transcriptions"
-            );
+    // private static void generateSubtitleFile(String subtitleFilePath, String transcription) {
+    //     // Implement your code to generate the subtitle file (e.g., in SRT format) using the transcription
+    //     // You may need to parse the transcription response (JSON) and extract the relevant text and timestamps
+        
+    //     // SubtitleGenerator.generateSubtitleFile(subtitleFilePath, transcription);
 
-            Process process = processBuilder.start();
-            process.waitFor();
+    //     try (BufferedWriter writer = new BufferedWriter(new FileWriter(subtitleFilePath))) {
+    //         for (int i = 0; i < transcriptions.size(); i++) {
+    //             String startTime = formatTime(i * 5);  // 每5秒为一个字幕时间段
+    //             String endTime = formatTime((i + 1) * 5);
+    //             String text = transcriptions.get(i);
 
-            InputStream inputStream = process.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder response = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-
-            return response.toString();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private static void generateSubtitleFile(String subtitleFilePath, String transcription) {
-        // Implement your code to generate the subtitle file (e.g., in SRT format) using the transcription
-        // You may need to parse the transcription response (JSON) and extract the relevant text and timestamps
-        SubtitleGenerator.generateSubtitleFile(subtitleFilePath, transcription);
-    }
+    //             writer.write(String.valueOf(i + 1));
+    //             writer.newLine();
+    //             writer.write(startTime + " --> " + endTime);
+    //             writer.newLine();
+    //             writer.write(text);
+    //             writer.newLine();
+    //             writer.newLine();
+    //         }
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
     private static void bindSubtitlesToVideo(String videoFilePath, String subtitleFilePath, String outputFilePath) {
         try {
@@ -82,5 +79,14 @@ public class VideoTranscription {
             e.printStackTrace();
         }
     }
+
+    // private static String formatTime(int seconds) {
+    //     int hours = seconds / 3600;
+    //     int minutes = (seconds % 3600) / 60;
+    //     int remainingSeconds = seconds % 60;
+
+    //     return String.format("%02d:%02d:%02d,000", hours, minutes, remainingSeconds);
+    // }
+
 }
 

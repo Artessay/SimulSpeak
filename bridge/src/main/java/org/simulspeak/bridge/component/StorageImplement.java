@@ -89,9 +89,11 @@ public class StorageImplement implements VideoService {
     }
 
     public String apply(Long userId, Long videoId, int applyType) {
-        // if (socket == null || toServer == null || fromServer == null) {
-        //     connectStorageServer();
-        // }
+        if (userId == BridgeConfig.ERROR_USER_ID || videoId == BridgeConfig.ERROR_VIDEO_ID) {
+            logger.info("apply video parameter is null");
+            return null;
+        }
+        
         connectStorageServer();
 
         String url = null;
