@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="110dp" />
+
+    <TextView
+        android:layout_width="350dp"
+        android:layout_height="110dp"
+        android:layout_gravity="center"
+        android:background="@drawable/symbol" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"/>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+            <TextView
+                android:layout_width="28dp"
+                android:layout_height="60dp"
+                />
+
+            <TextView
+                android:layout_width="88dp"
+                android:layout_height="60dp"
+                android:gravity="center_vertical|right"
+                android:text="账 号"
+                android:textSize="18sp" />
+
+            <EditText
+                android:drawableStart="@drawable/kb"
+                android:id="@+id/et0"
+                android:textCursorDrawable="@null"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="15dp"
+
+                android:background="@drawable/full_corner"
+                android:layout_width="188dp"
+                android:layout_height="40dp"
+                android:hint="   请输入账号"
+                android:lines="1"
+                />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+            <TextView
+                android:layout_width="28dp"
+                android:layout_height="60dp"
+                />
+
+            <TextView
+                android:layout_width="88dp"
+                android:layout_height="60dp"
+                android:gravity="center_vertical|right"
+                android:text="密 码"
+                android:textSize="18sp" />
+
+            <EditText
+                android:drawableStart="@drawable/kb"
+                android:id="@+id/et1"
+                android:textCursorDrawable="@null"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="15dp"
+
+                android:background="@drawable/full_corner"
+                android:layout_width="188dp"
+                android:layout_height="40dp"
+
+                android:inputType="textPassword"
+                android:lines="1"
+                android:hint="   请输入密码"
+                />
+        </TableRow>
+    </TableLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"/>
+    <Button
+        android:id="@+id/btn_1"
+        android:layout_gravity="center"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:background="@drawable/round_corner"
+        android:text="登   录"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="10dp"/>
+    <Button
+        android:id="@+id/btn_2"
+        android:layout_gravity="center"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:background="@drawable/round_corner"
+        android:text="注   册"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:onClick="myClick"/>
+
+
+
+
+
+</LinearLayout>
