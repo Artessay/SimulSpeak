@@ -149,6 +149,8 @@ public class AudioRecognition implements SubtitleService {
             logger.error("recognize request failed, status code: " + statusCode);
         }
 
+        
+
         return response.toString();
     }
 
@@ -162,11 +164,11 @@ public class AudioRecognition implements SubtitleService {
         return time;
     }
 
-    // public static void main(String[] args) {
-    //     AudioRecognition audioRecognition = new AudioRecognition();
-    //     String audioFilePath = "src/test/resources/audio/1.mp3";
-    //     audioRecognition.recognize(audioFilePath);
-    //     // System.out.println(result);
-    // }
+    public static void main(String[] args) {
+        AudioRecognition audioRecognition = new AudioRecognition();
+        String audioFilePath = "http://192.168.137.1:80/sounds/Tyl1nf6wP8.mp3";
+        String result = audioRecognition.recognize(audioFilePath);
+        System.out.println(result);
+    }
 }
 
